@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      name: redis
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        volumeMounts:
+        - mountPath: /data
+          name: pvc
+        - mountPath: /usr/local/etc/redis
+          name: config
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: redis
+        - name: config
+          configMap:
+            name: redis-config
+            items:
+            - key: redis.conf
+              path: redis.conf
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 512M
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    name: redis

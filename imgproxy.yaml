@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imgproxy
+  labels:
+    app: imgproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imgproxy
+  template:
+    metadata:
+      name: imgproxy
+      labels:
+        app: imgproxy
+    spec:
+      containers:
+      - name: imgproxy
+        image: darthsim/imgproxy:latest
+        env:
+        - name: IMGPROXY_KEY
+          value: "fe2859b5e12468c6c2239b6a2a14"
+        - name: IMGPROXY_SALT
+          value: "d2f71f8700a519c1539eabc31a43"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: imgproxy
+spec:
+  # type: NodePort
+  selector:
+    app: imgproxy
+  ports:
+  - protocol: TCP
+    port: 8080
+    # nodePort: 30004

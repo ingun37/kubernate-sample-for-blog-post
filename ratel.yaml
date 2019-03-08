@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ratel
+  labels:
+    app: ratel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratel
+  template:
+    metadata:
+      name: ratel
+      labels:
+        app: ratel
+    spec:
+      containers:
+      - name: ratel
+        ports:
+        - containerPort: 8000
+        image: dgraph/dgraph:latest
+        #volumeMounts:
+        #- mountPath: /dgraph
+        #  name: volume
+        command: ["dgraph-ratel"]
+        #volumes:
+        #- name: volume
+        #  persistentVolumeClaim:
+        #    claimName: dgraph
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ratel
+spec:
+  # type: NodePort
+  selector:
+    app: ratel
+  ports:
+  - protocol: TCP
+    port: 8000
+    # nodePort: 30002
+    name: http
