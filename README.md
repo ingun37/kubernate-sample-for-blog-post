@@ -1,4 +1,4 @@
-Sample kuberante resources.
+Sample kubernetes resources.
 
 Includes https, grpcs ingressing.
 
