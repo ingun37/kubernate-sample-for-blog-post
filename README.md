@@ -9,4 +9,6 @@ Requirements
 * virtualbox
 * docker
 
+run with `./run.sh`
+
 ![diagram](./diagram.jpeg)
